@@ -84,11 +84,15 @@
     const value = m?.[1] || el.getAttribute('data-rating') || (el.getAttribute('itemprop')==='ratingValue' ? el.textContent : null);
     if (value != null && value !== '') { const n=Number(String(value).replace(',','.')); if(n>=0 && n<=5)rating=n; }
   }
+  let category='',description='',brand='';
   // Public structured product data; never read private account state or call Shopee APIs.
   function readProduct(node) {
     if (!node || typeof node !== 'object') return;
     if (Array.isArray(node)) { node.forEach(readProduct); return; }
     if ([].concat(node['@type'] || []).includes('Product')) {
+      category ||= clean(typeof node.category==='string'?node.category:'').slice(0,400);
+      description ||= clean(node.description).slice(0,1500);
+      brand ||= clean(typeof node.brand==='string'?node.brand:node.brand?.name).slice(0,100);
       const aggregate=node.aggregateRating;
       if(aggregate) {
         const n=Number(String(aggregate.ratingValue ?? '').replace(',','.'));
@@ -96,12 +100,20 @@
         reviews ??= human(aggregate.reviewCount ?? aggregate.ratingCount);
       }
     }
+    if([].concat(node['@type']||[]).includes('BreadcrumbList')&&Array.isArray(node.itemListElement)){
+      category ||= node.itemListElement.map(item=>clean(item.name||item.item?.name)).filter(Boolean).join(' > ').slice(0,400);
+    }
     if(node['@graph'])readProduct(node['@graph']);
   }
   for(const script of document.querySelectorAll('script[type="application/ld+json"]')) {
     try { readProduct(JSON.parse(script.textContent)); } catch {}
   }
   if (!(rating>=0 && rating<=5)) rating=null;
+  if(!category){
+    const crumbs=document.querySelector('nav[aria-label*="breadcrumb" i], [class*="breadcrumb" i]');
+    category=clean(crumbs?.innerText).slice(0,400);
+  }
+  description ||= clean(document.querySelector('meta[property="og:description"]')?.content||document.querySelector('meta[name="description"]')?.content).slice(0,1500);
 
   const productRegionTop = h1Rect ? Math.max(0, h1Rect.top - 500) : 0;
   const productImages = new Set();
@@ -120,6 +132,9 @@
   window.__ECOMFY_RADAR_CAPTURE__ = {
     url: location.href,
     title,
+    category,
+    description,
+    brand,
     price,
     sold,
     rating: Number.isFinite(rating) ? rating : null,

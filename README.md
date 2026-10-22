@@ -51,3 +51,16 @@ Para atualizar uma instalação manual: baixe o ZIP em **Code → Download ZIP**
 Neste repositório público os arquivos estão na raiz: selecione diretamente a pasta extraída que contém `manifest.json`. O espelho dentro do projeto Ecomfy fica em `extension/ecomfy-radar`.
 
 A página da Shopee precisa estar carregada. Se algum dado não aparecer, use **Capturar novamente** ou preencha manualmente. Após abrir o Ecomfy, revise e clique em **Analisar oportunidade**. A extensão não dispara análise paga ou altera anúncios automaticamente.
+
+
+## Atualização 0.3.0 — atividades e fornecedores
+
+Baixe novamente os arquivos deste repositório, substitua a pasta da extensão instalada e clique em **Atualizar** no cartão Ecomfy Radar em `chrome://extensions` ou `edge://extensions`. A versão deve aparecer como **0.3.0**.
+
+A pasta precisa incluir também **cnae-catalog.js** e **cnae-match.js**. As permissões continuam iguais.
+
+Além dos indicadores do anúncio, a extensão envia categoria, descrição e marca quando disponíveis e sugere atividades de fabricantes/atacadistas pelo produto. O CNAE é uma atividade da empresa: a sugestão não é uma classificação fiscal oficial nem comprovação de que o vendedor fabrica o item.
+
+Ao abrir o Ecomfy com preço e custo preenchidos, a análise e o plano de teste são preparados automaticamente. A etapa **Do teste ao fornecedor** aparece logo abaixo. O site oferece filtros por atividade e região; a listagem interna de empresas depende da conexão da fonte cadastral pelo administrador. Pesquisas externas ficam identificadas separadamente.
+
+Os códigos/descritores do catálogo são dados públicos IBGE/CONCLA, obtidos do espelho https://github.com/Benedito00/cnae-ibge em 22/10/2026. Fonte oficial: https://servicodados.ibge.gov.br/api/v2/cnae/subclasses.

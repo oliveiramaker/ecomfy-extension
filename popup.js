@@ -47,6 +47,11 @@ async function screenshotOcr(dataUrl){
     return null;
   }
 }
+function showActivities(){
+  const product={...capture,title:$('title').value};
+  const matches=window.EcomfyCnae?.infer(product)||[];
+  $('activities').textContent=matches.length?matches.slice(0,2).map(row=>window.EcomfyCnae.format(row.code)+' · '+row.label).join(' / '):'O Ecomfy tentará sugerir atividades a partir do nome, categoria e descrição.';
+}
 function fill(data,source){
   capture=data||{};
   setValue('title',capture.title);
@@ -57,6 +62,7 @@ function fill(data,source){
   setValue('images',capture.images);
   $('video').checked=Boolean(capture.video);
   $('source').textContent=source;
+  showActivities();
   $('send').disabled=!Number($('price').value);
 }
 async function capturePage(){
@@ -124,6 +130,9 @@ async function sendToEcomfy(){
     title:$('title').value.trim().slice(0,500),
     price,
     cost,
+    category:String(capture.category||'').slice(0,400),
+    description:String(capture.description||'').slice(0,1500),
+    brand:String(capture.brand||'').slice(0,100),
     sold:$('sold').value||null,
     rating:$('rating').value||null,
     reviews:$('reviews').value||null,
@@ -143,6 +152,7 @@ async function sendToEcomfy(){
     $('send').disabled=false;
   }
 }
+$('title').addEventListener('input',showActivities);
 $('send').addEventListener('click',sendToEcomfy);
 $('recapture').addEventListener('click',capturePage);
 ['price','cost'].forEach(id=>$(id).addEventListener('input',()=>{
