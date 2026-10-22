@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Ecomfy Radar",
+  "version": "0.2.0",
+  "description": "Captura dados visíveis de anúncios da Shopee e envia para o Radar de Produtos do Ecomfy.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "action": {
+    "default_title": "Analisar no Ecomfy",
+    "default_popup": "popup.html"
+  }
+}
